@@ -1,6 +1,6 @@
 import json
 
-from datetime import date
+from datetime import datetime
 
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
@@ -15,7 +15,7 @@ app = FastAPI()
 class ApiEvent(BaseModel):
     name: str
     description: str = None
-    date: date
+    date: datetime
     family_id: int
 
 
