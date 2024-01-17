@@ -16,7 +16,7 @@ class ApiEvent(BaseModel):
     name: str
     description: str = None
     date: datetime
-    family_id: int
+    family_id: int = None
 
 
 class ApiFamily(BaseModel):
