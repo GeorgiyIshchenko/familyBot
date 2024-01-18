@@ -20,6 +20,6 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("start", start))
 
     # ques
-    application.job_queue.run_repeating(callback=send_event_notifications, interval=3)
+    application.job_queue.run_repeating(callback=send_event_notifications, interval=5)
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
