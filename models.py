@@ -25,7 +25,7 @@ class Event(Base):
     __tablename__ = "events"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True, nullable=True)
-    name = Column(String)
+    name = Column(String, unique=True)
     description = Column(String, nullable=True)
     date = Column(Date)
     family_id = Column(Integer, ForeignKey("families.family_id"))
