@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from models import Base, Family, Event
 
 DATABASE_URL = "sqlite:///family.db"
-engine = create_engine("sqlite:///family.db", connect_args={"check_same_thread": False})
+engine = create_engine("sqlite:///family.db", connect_args={"check_same_thread": False}, echo=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
@@ -19,9 +19,9 @@ def get_db() -> SessionLocal:
         db.close()
 
 
-def create_family(telegram_id: int, db: Session, events: list = None) -> Family | Exception:
+def create_family(family_id: int, db: Session, events: list = None) -> Family | Exception:
     try:
-        family = Family(telegram_id=telegram_id)
+        family = Family(family_id=family_id)
         db.add(family)
         db.commit()
 
@@ -50,6 +50,13 @@ def family_list(db: Session) -> list[Type[Family]]:
 
 def event_list(db: Session) -> list[Type[Event]]:
     return db.query(Event).all()
+
+
+def get_events_by_family(family_id: int, db: Session) -> list[Type[Event]] | Exception:
+    try:
+        return db.query(Event).filter_by(family_id=family_id).all()
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":

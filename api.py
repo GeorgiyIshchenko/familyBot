@@ -20,13 +20,13 @@ class ApiEvent(BaseModel):
 
 
 class ApiFamily(BaseModel):
-    telegram_id: int
+    family_id: int
     events: list[ApiEvent] = None
 
 
 @app.post("/families/create")
 def post_family(family: ApiFamily, db: Session = Depends(get_db)):
-    return create_family(telegram_id=family.telegram_id, events=family.events, db=db).as_dict()
+    return create_family(family_id=family.family_id, events=family.events, db=db).as_dict()
 
 
 @app.post("/events/create")

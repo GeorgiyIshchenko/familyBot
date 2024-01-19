@@ -7,11 +7,17 @@ class Base(DeclarativeBase):
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
+    def __repr__(self):
+        s = str()
+        for column in self.__table__.columns:
+            s += f"{column.name} : {getattr(self, column.name)}\n"
+        return s
+
 
 class Family(Base):
     __tablename__ = "families"
 
-    telegram_id = Column(Integer, primary_key=True, index=True)
+    family_id = Column(Integer, primary_key=True, index=True)
     events = relationship("Event", back_populates="family")
 
 
@@ -22,5 +28,5 @@ class Event(Base):
     name = Column(String)
     description = Column(String, nullable=True)
     date = Column(Date)
-    family_id = Column(Integer, ForeignKey("families.telegram_id"))
+    family_id = Column(Integer, ForeignKey("families.family_id"))
     family = relationship("Family", back_populates="events")

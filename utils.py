@@ -26,7 +26,7 @@ def get_month_translation(month: int) -> str:
 
 def get_pretty_message(event: Event):
     years_left = int(event.date.year - datetime.now().year)
-    return f"Спешим Вас уведомить. \n\nСегодня, {event.date.day} {get_month_translation(event.date.month)}, {years_left} {get_year_translation(years_left)} назад произошло событие:\n\"{event.name}\". \n\nПримечание: {event.description}"
+    return f"Спешим Вас уведомить.\n\nСегодня, {event.date.day} {get_month_translation(event.date.month)}, {years_left} {get_year_translation(years_left)} назад произошло событие:\n\"{event.name}\". \n\nПримечание: {event.description}"
 
 
 async def send_event_notifications(context: ContextTypes.DEFAULT_TYPE) -> None:
