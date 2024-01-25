@@ -19,14 +19,13 @@ def get_db() -> SessionLocal:
         db.close()
 
 
-def create_family(family_id: int, db: Session, events: list = None) -> Family | Exception:
+def create_family(family_id: int, access_token: str, db: Session, events: list = None) -> Family | Exception:
     try:
-        family = Family(family_id=family_id)
+        family = Family(family_id=family_id, access_token=access_token)
         db.add(family)
         db.commit()
 
         for event in events:
-            print(event)
             create_event(event.name, event.description, event.family_id, event.date, db)
 
         return family

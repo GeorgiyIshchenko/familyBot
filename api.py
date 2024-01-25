@@ -1,5 +1,3 @@
-import json
-
 from datetime import datetime
 
 from fastapi import FastAPI, Depends
@@ -21,12 +19,15 @@ class ApiEvent(BaseModel):
 
 class ApiFamily(BaseModel):
     family_id: int
+    access_token: str
     events: list[ApiEvent] = None
 
 
 @app.post("/families/create")
 def post_family(family: ApiFamily, db: Session = Depends(get_db)):
-    return create_family(family_id=family.family_id, events=family.events, db=db).as_dict()
+    print(str(family))
+    family = create_family(family_id=family.family_id, access_token=family.access_token, events=family.events, db=db)
+    return family.as_dict() if family is not None else None
 
 
 @app.post("/events/create")
@@ -36,9 +37,11 @@ def post_event(event: ApiEvent, db: Session = Depends(get_db)):
 
 @app.get("/families")
 async def get_family_list(db: Session = Depends(get_db)):
-    return [f.as_dict() for f in family_list(db)]
+    fl = family_list(db)
+    return [f.as_dict() for f in fl] if len(fl) else None
 
 
 @app.get("/events")
 async def get_events_list(db: Session = Depends(get_db)):
-    return [e.as_dict() for e in event_list(db)]
+    el = event_list(db)
+    return [f.as_dict() for f in el] if len(el) else None

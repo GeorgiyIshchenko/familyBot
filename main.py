@@ -19,6 +19,7 @@ if __name__ == "__main__":
     # handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("events", get_family_events))
+    application.add_handler(CommandHandler("update", update_events))
     # ques
     application.job_queue.run_repeating(callback=send_event_notifications, interval=300)
 

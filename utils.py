@@ -1,7 +1,5 @@
 from datetime import datetime
-from typing import Type
 
-from fastapi import Depends
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
@@ -26,7 +24,7 @@ def get_month_translation(month: int) -> str:
 
 def get_pretty_message(event: Event):
     years_left = int(event.date.year - datetime.now().year)
-    return f"Спешим Вас уведомить.\n\nСегодня, {event.date.day} {get_month_translation(event.date.month)}, {years_left} {get_year_translation(years_left)} назад произошло событие:\n\"{event.name}\". \n\nПримечание: {event.description}"
+    return f"⏰ Спешим Вас уведомить ⏰️\n\nСегодня, {event.date.day} {get_month_translation(event.date.month)}, {years_left} {get_year_translation(years_left)} назад произошло событие:\n\"{event.name}\". \n\nПримечание: {event.description}"
 
 
 async def send_event_notifications(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -37,3 +35,4 @@ async def send_event_notifications(context: ContextTypes.DEFAULT_TYPE) -> None:
                                                       parse_mode=ParseMode.HTML)
         except Exception as e:
             print(e)
+
