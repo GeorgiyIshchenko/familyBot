@@ -26,7 +26,7 @@ def create_family(family_id: int, access_token: str, db: Session, events: list =
         db.commit()
 
         for event in events:
-            create_event(event.name, event.description, event.family_id, event.date, db)
+            create_event(event.name, event.description, family_id, event.date, db)
 
         return family
     except Exception as e:

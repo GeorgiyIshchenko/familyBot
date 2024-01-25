@@ -38,10 +38,10 @@ def post_event(event: ApiEvent, db: Session = Depends(get_db)):
 @app.get("/families")
 async def get_family_list(db: Session = Depends(get_db)):
     fl = family_list(db)
-    return [f.as_dict() for f in fl] if len(fl) else None
+    return [f.as_dict() for f in fl if f is not None]
 
 
 @app.get("/events")
 async def get_events_list(db: Session = Depends(get_db)):
     el = event_list(db)
-    return [f.as_dict() for f in el] if len(el) else None
+    return [e.as_dict() for e in el if e is not None]
