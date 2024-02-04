@@ -19,6 +19,10 @@ def get_db() -> SessionLocal:
         db.close()
 
 
+def get_family_by_id(family_id: int, db: Session) -> Type[Family]:
+    return db.query(Family).get(family_id)
+
+
 def create_family(family_id: int, access_token: str, db: Session, events: list = None) -> Family | Exception:
     try:
         family = Family(family_id=family_id, access_token=access_token)

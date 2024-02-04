@@ -7,7 +7,7 @@ from database import *
 from models import *
 
 
-app = FastAPI()
+app = FastAPI(debug=True, title="API")
 
 
 class ApiEvent(BaseModel):
@@ -26,13 +26,13 @@ class ApiFamily(BaseModel):
 @app.post("/families/create")
 def post_family(family: ApiFamily, db: Session = Depends(get_db)):
     print(str(family))
-    family = create_family(family_id=family.family_id, access_token=family.access_token, events=family.events, db=db)
+    family = create_family(family_id=int(family.family_id), access_token=family.access_token, events=family.events, db=db)
     return family.as_dict() if family is not None else None
 
 
 @app.post("/events/create")
 def post_event(event: ApiEvent, db: Session = Depends(get_db)):
-    return create_event(event.name, event.description, event.family_id, event.date, db).as_dict()
+    return create_event(event.name, event.description, int(event.family_id), event.date, db).as_dict()
 
 
 @app.get("/families")
