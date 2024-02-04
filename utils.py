@@ -1,17 +1,18 @@
 from datetime import datetime
 
+from fastapi import Depends
+from sqlalchemy.orm import Session
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from sqlalchemy import and_, func
 
-from database import SessionLocal
+from database import SessionLocal, get_db
 from models import Event
 
 
-def get_today_events() -> list[Event]:
+def get_today_events(db: Session = Depends(get_db)) -> list[Event]:
     today_date = datetime.today()
-    db = SessionLocal()
     events = db.query(Event).all()
     result = list()
     for event in events:
