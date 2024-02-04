@@ -25,7 +25,6 @@ class ApiFamily(BaseModel):
 
 @app.post("/families/create")
 def post_family(family: ApiFamily, db: Session = Depends(get_db)):
-    print(str(family))
     family = create_family(family_id=int(family.family_id), access_token=family.access_token, events=family.events, db=db)
     return family.as_dict() if family is not None else None
 

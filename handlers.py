@@ -12,7 +12,6 @@ host_url = "http://127.0.0.1:80" if settings.DEBUG else "https://notion-auth.ver
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     family_id = update.message.chat_id
-    print(update.message.chat, family_id)
     auth_url = f"{host_url}/?family_id={family_id}"
     keyboard = [[InlineKeyboardButton("🟢 Авторизоваться в Notion 🟢", url=auth_url)]]
     await update.message.reply_text(
@@ -25,7 +24,7 @@ async def update_events(update: Update, context: ContextTypes.DEFAULT_TYPE, pre_
     update_url = f"{host_url}/events"
 
     try:
-        db = SessionLocal()
+        db = get_db()
         family = get_family_by_id(update.message.chat_id, db)
 
         req = requests.get(url=update_url, json={"family_id": family.family_id, "access_token": family.access_token})
@@ -48,14 +47,17 @@ async def update_events(update: Update, context: ContextTypes.DEFAULT_TYPE, pre_
 
 async def get_family_events(update: Update, context: ContextTypes.DEFAULT_TYPE):
     family_id = update.message.chat_id
-    db = SessionLocal()
-    events = get_events_by_family(family_id, db)
-    if events:
-        events = sorted(events, key=lambda x: x.date, reverse=True)
-        result = "👨‍👩‍👧‍👦 Отлично, вот значимые события вашей семьи 📅\n\n"
-        for event in events:
-            result += f"{event.as_pretty_string()}\n\n"
-        await update.message.reply_text(result, parse_mode='HTML')
-    else:
-        await update.message.reply_text(
-            "🔴 Вы еще не добавили ни одного события 🔴\n\n⬇️ Используйте команду /update для того чтобы обновить данные ⬇️")
+    try:
+        db = get_db()
+        events = get_events_by_family(family_id, db)
+        if events:
+            events = sorted(events, key=lambda x: x.date, reverse=True)
+            result = "👨‍👩‍👧‍👦 Отлично, вот значимые события вашей семьи 📅\n\n"
+            for event in events:
+                result += f"{event.as_pretty_string()}\n\n"
+            await update.message.reply_text(result, parse_mode='HTML')
+        else:
+            await update.message.reply_text(
+                "🔴 Вы еще не добавили ни одного события 🔴\n\n⬇️ Используйте команду /update для того чтобы обновить данные ⬇️")
+    except Exception as e:
+        print(e)
