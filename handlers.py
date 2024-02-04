@@ -20,13 +20,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"⬇️ Для загрузки данных нажмите на кнопку ⬇️", reply_markup=InlineKeyboardMarkup(keyboard))
 
 
-async def update_events(update: Update, context: ContextTypes.DEFAULT_TYPE, pre_message: str = "",  db: Session = Depends(get_db)):
+async def update_events(update: Update, context: ContextTypes.DEFAULT_TYPE, pre_message: str = ""):
     # TODO: update function
     update_url = f"{host_url}/events"
 
     try:
+        db = SessionLocal()
         family = get_family_by_id(update.message.chat_id, db)
-
         req = requests.get(url=update_url, json={"family_id": family.family_id, "access_token": family.access_token})
 
         for event in get_events_by_family(family.family_id, db):
@@ -45,9 +45,10 @@ async def update_events(update: Update, context: ContextTypes.DEFAULT_TYPE, pre_
         await update.message.reply_text("🔴 Что-то пошло не так! 🔴")
 
 
-async def get_family_events(update: Update, context: ContextTypes.DEFAULT_TYPE,  db: Session = Depends(get_db)):
+async def get_family_events(update: Update, context: ContextTypes.DEFAULT_TYPE):
     family_id = update.message.chat_id
     try:
+        db = SessionLocal()
         events = get_events_by_family(family_id, db)
         if events:
             events = sorted(events, key=lambda x: x.date, reverse=True)

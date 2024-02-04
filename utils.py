@@ -11,8 +11,9 @@ from database import SessionLocal, get_db
 from models import Event
 
 
-def get_today_events(db: Session = Depends(get_db)) -> list[Event]:
+def get_today_events() -> list[Event]:
     today_date = datetime.today()
+    db = SessionLocal()
     events = db.query(Event).all()
     result = list()
     for event in events:
