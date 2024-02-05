@@ -27,7 +27,8 @@ async def update_events(update: Update, context: ContextTypes.DEFAULT_TYPE, pre_
     try:
         db = SessionLocal()
         family = get_family_by_id(update.message.chat_id, db)
-        req = requests.get(url=update_url, json={"family_id": family.family_id, "access_token": family.access_token})
+        req = requests.get(url=update_url, json={"family_id": family.family_id, "access_token": family.access_token},
+                           timeout=10)
 
         for event in get_events_by_family(family.family_id, db):
             db.delete(event)
