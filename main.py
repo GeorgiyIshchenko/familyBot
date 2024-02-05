@@ -23,4 +23,4 @@ if __name__ == "__main__":
     # ques
     application.job_queue.run_repeating(callback=send_event_notifications, interval=24 * 60 * 60)
 
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    application.run_polling(allowed_updates=Update.ALL_TYPES, poll_interval=0.5, timeout=20)
