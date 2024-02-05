@@ -25,6 +25,7 @@ def get_family_by_id(family_id: int, db: Session) -> Type[Family]:
     try:
         return db.query(Family).get(family_id)
     except Exception as e:
+        db.rollback()
         print(e)
 
 
@@ -39,6 +40,7 @@ def create_family(family_id: int, access_token: str, db: Session, events: list =
 
         return family
     except Exception as e:
+        db.rollback()
         print(e)
 
 
@@ -49,6 +51,7 @@ def create_event(name: str, description: str, family_id: int, date: datetime.dat
         db.commit()
         return event
     except Exception as e:
+        db.rollback()
         print(e)
 
 
@@ -56,6 +59,7 @@ def family_list(db: Session) -> list[Type[Family]]:
     try:
         return db.query(Family).all()
     except Exception as e:
+        db.rollback()
         print(e)
 
 
