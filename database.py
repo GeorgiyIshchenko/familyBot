@@ -67,6 +67,7 @@ def event_list(db: Session) -> list[Type[Event]]:
     try:
         return db.query(Event).all()
     except Exception as e:
+        db.rollback()
         print(e)
 
 
@@ -74,6 +75,7 @@ def get_events_by_family(family_id: int, db: Session) -> list[Type[Event]] | Exc
     try:
         return db.query(Event).filter_by(family_id=family_id).all()
     except Exception as e:
+        db.rollback()
         print(e)
 
 
