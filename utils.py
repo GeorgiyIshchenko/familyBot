@@ -1,14 +1,18 @@
 from datetime import datetime
 
+import requests
 from fastapi import Depends
 from sqlalchemy.orm import Session
+from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from sqlalchemy import and_, func
 
-from database import SessionLocal, get_db
+from database import *
 from models import Event
+
+import settings
 
 
 def get_today_events() -> list[Event]:
@@ -44,3 +48,28 @@ async def send_event_notifications(context: ContextTypes.DEFAULT_TYPE) -> None:
                                                       parse_mode=ParseMode.HTML)
         except Exception as e:
             print(e)
+
+
+async def update_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    update_url = f"{settings.host_url}/events"
+
+    try:
+        db = SessionLocal()
+        family = get_family_by_id(update.message.chat_id, db)
+        req = requests.get(url=update_url, json={"family_id": family.family_id, "access_token": family.access_token},
+                           timeout=10)
+
+        for event in get_events_by_family(family.family_id, db):
+            db.delete(event)
+
+        for event in req.json()["events"]:
+            create_event(name=event["name"], date=datetime.strptime(event["date"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+                         description=event["description"],
+                         family_id=event["family_id"], db=db)
+
+        db.commit()
+
+        await update.message.reply_text(f"🟢 Обновление прошло успешно! 🟢")
+    except Exception as e:
+        print(e)
+        await update.message.reply_text("🔴 Что-то пошло не так! 🔴")
