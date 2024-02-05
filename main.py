@@ -15,7 +15,7 @@ BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 if __name__ == "__main__":
     # Bot Setup
-    application = Application.builder().token(BOT_TOKEN).build()
+    application = Application.builder().token(BOT_TOKEN).read_timeout(15).get_updates_read_timeout(40).build()
     # handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("events", get_family_events))
