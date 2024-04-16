@@ -1,14 +1,15 @@
-import asyncio
 import os
-import uvicorn
 
 from dotenv import load_dotenv
 
 from telegram.ext import Application, CommandHandler
 
-from api import app
 from handlers import *
 from utils import send_event_notifications
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
 BOT_TOKEN = os.environ["BOT_TOKEN"]

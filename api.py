@@ -8,8 +8,6 @@ from models import *
 
 import logging
 
-
-logging.basicConfig(level=logging.INFO)
 app = FastAPI(debug=True, title="API")
 
 
@@ -34,8 +32,6 @@ def post_family(family: ApiFamily, db: Session = Depends(get_db)):
 
 @app.post("/events/create")
 def post_event(event: ApiEvent, db: Session = Depends(get_db)):
-    print(f"Post event : {event.date}")
-    logging.info(f"Post event : {event.date}")
     return create_event(event.name, event.description, int(event.family_id), event.date, db).as_dict()
 
 

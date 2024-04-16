@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from models import Base, Family, Event
 
-import settings
+import logging
 
 DATABASE_URL = "sqlite:///family.db"
 engine = create_engine("sqlite:///family.db", pool_pre_ping=True, echo=False)
@@ -46,6 +46,7 @@ def create_family(family_id: int, access_token: str, db: Session, events: list =
 
 def create_event(name: str, description: str, family_id: int, date: datetime.date, db: Session) -> Event | Exception:
     try:
+        logging.info(f"New event with date: {date}")
         event = Event(name=name, description=description, date=date, family_id=family_id)
         db.add(event)
         db.commit()
