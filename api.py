@@ -6,6 +6,8 @@ from pydantic import BaseModel
 from database import *
 from models import *
 
+import logging
+
 
 app = FastAPI(debug=True, title="API")
 
@@ -31,6 +33,7 @@ def post_family(family: ApiFamily, db: Session = Depends(get_db)):
 
 @app.post("/events/create")
 def post_event(event: ApiEvent, db: Session = Depends(get_db)):
+    logging.info(f"Post event : {event}")
     return create_event(event.name, event.description, int(event.family_id), event.date, db).as_dict()
 
 
