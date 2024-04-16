@@ -9,6 +9,7 @@ from models import *
 import logging
 
 
+logging.basicConfig(level=logging.NOTSET)
 app = FastAPI(debug=True, title="API")
 
 
