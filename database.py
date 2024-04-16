@@ -9,7 +9,7 @@ from models import Base, Family, Event
 import settings
 
 DATABASE_URL = "sqlite:///family.db"
-engine = create_engine("sqlite:///family.db", pool_pre_ping=True, echo=True)
+engine = create_engine("sqlite:///family.db", pool_pre_ping=True, echo=False)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
