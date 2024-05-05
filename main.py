@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-
+from datetime import time
 from telegram.ext import Application, CommandHandler
 
 from handlers import *
@@ -24,6 +24,6 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("update", update_events))
     # ques
     application.job_queue.run_once(callback=send_event_notifications, when=1)
-    application.job_queue.run_repeating(callback=send_event_notifications, interval=24 * 60 * 60)
+    application.job_queue.run_daily(callback=send_event_notifications, time=time(hour=5))
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
