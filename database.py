@@ -43,7 +43,7 @@ def delete_old_family(family_id: int, db: Session):
 
 def create_family(family_id: int, access_token: str, db: Session, events: list = None) -> Family | Exception:
     try:
-        delete_old_family(family_id)
+        delete_old_family(family_id, db)
 
         family = Family(family_id=family_id, access_token=access_token)
         db.add(family)
